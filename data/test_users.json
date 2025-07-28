@@ -1,0 +1,59 @@
+{
+  "users": {
+    "standard_user": {
+      "username": "standard_user",
+      "password": "secret_sauce",
+      "description": "Standard user with full access",
+      "expected_behavior": "should_login_successfully"
+    },
+    "locked_out_user": {
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "description": "User that has been locked out",
+      "expected_behavior": "should_show_locked_error"
+    },
+    "problem_user": {
+      "username": "problem_user",
+      "password": "secret_sauce",
+      "description": "User with problems (broken images, etc.)",
+      "expected_behavior": "should_login_successfully"
+    },
+    "performance_glitch_user": {
+      "username": "performance_glitch_user",
+      "password": "secret_sauce",
+      "description": "User with performance issues",
+      "expected_behavior": "should_login_slowly"
+    },
+    "invalid_user": {
+      "username": "invalid_user",
+      "password": "invalid_pass",
+      "description": "Invalid credentials",
+      "expected_behavior": "should_show_invalid_error"
+    },
+    "empty_username": {
+      "username": "",
+      "password": "secret_sauce",
+      "description": "Empty username test",
+      "expected_behavior": "should_show_username_required_error"
+    },
+    "empty_password": {
+      "username": "standard_user",
+      "password": "",
+      "description": "Empty password test",
+      "expected_behavior": "should_show_password_required_error"
+    },
+    "empty_credentials": {
+      "username": "",
+      "password": "",
+      "description": "Both fields empty",
+      "expected_behavior": "should_show_username_required_error"
+    }
+  },
+  
+  "error_messages": {
+    "locked_out": "Sorry, this user has been locked out.",
+    "invalid_credentials": "Username and password do not match any user in this service",
+    "username_required": "Username is required",
+    "password_required": "Password is required"
+  }
+} 
