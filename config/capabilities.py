@@ -12,8 +12,15 @@ ANDROID_APP_PATH = BASE_DIR / "apps/android/Android.SauceLabs.Mobile.Sample.app.
 IOS_APP_PATH = BASE_DIR / "apps/ios"  # Will find .app file dynamically
 
 def get_ios_app_path():
-    """Find the iOS .app file in the iOS apps directory"""
+    """Find the iOS app file (.ipa or .app) in the iOS apps directory"""
     ios_dir = Path(IOS_APP_PATH)
+    
+    # First look for .ipa files (for real devices)
+    ipa_files = list(ios_dir.glob("*.ipa"))
+    if ipa_files:
+        return str(ipa_files[0])
+    
+    # Then look for .app files (for simulators)
     app_files = list(ios_dir.glob("*.app"))
     if app_files:
         return str(app_files[0])
