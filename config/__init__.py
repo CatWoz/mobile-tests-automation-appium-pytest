@@ -1,0 +1,1 @@
+# Configuration Package for Mobile Test Automation 
