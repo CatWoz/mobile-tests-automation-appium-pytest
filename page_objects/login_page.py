@@ -6,7 +6,7 @@ import time
 from typing import Optional
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.common.by import By
-from .base_page1 import BasePage
+from .base_page import BasePage
 
 
 class LoginPage(BasePage):

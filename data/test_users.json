@@ -55,5 +55,28 @@
     "invalid_credentials": "Username and password do not match any user in this service",
     "username_required": "Username is required",
     "password_required": "Password is required"
+  },
+  
+  "checkout_info": {
+    "valid_user": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": "12345"
+    },
+    "invalid_missing_first_name": {
+      "firstName": "",
+      "lastName": "Doe",
+      "postalCode": "12345"
+    },
+    "invalid_missing_last_name": {
+      "firstName": "John",
+      "lastName": "",
+      "postalCode": "12345"
+    },
+    "invalid_missing_postal_code": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": ""
+    }
   }
 } 

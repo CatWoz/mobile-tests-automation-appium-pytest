@@ -3,9 +3,9 @@ Login functionality tests for SwagLabs Mobile App.
 """
 
 import pytest
-from page_objects.login_page1 import LoginPage
-from page_objects.inventory_page1 import InventoryPage
-from tests.base_test1 import BaseTest
+from page_objects.login_page import LoginPage
+from page_objects.inventory_page import InventoryPage
+from tests.base_test import BaseTest
 
 
 class TestLogin (BaseTest):

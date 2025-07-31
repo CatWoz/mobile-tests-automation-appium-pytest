@@ -414,3 +414,13 @@ class BasePage:
             self.logger.debug("Keyboard hidden")
         except Exception:
             self.logger.debug("No keyboard to hide")
+    
+    def sleep(self, seconds: int):
+        """
+        Sleep for specified number of seconds
+        
+        Args:
+            seconds: Number of seconds to sleep
+        """
+        self.logger.debug(f"Sleeping for {seconds} seconds")
+        time.sleep(seconds)
