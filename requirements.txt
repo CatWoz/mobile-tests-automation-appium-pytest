@@ -1,0 +1,32 @@
+# Core testing framework
+pytest==8.4.1
+pytest-html==4.1.1
+pytest-xdist==3.8.0
+pytest-rerunfailures==15.1
+
+# Appium and Selenium (Note: Major version updates - test compatibility)
+Appium-Python-Client==5.1.2
+selenium==4.34.2
+
+# Reporting
+pytest-json-report==1.5.0
+
+# HTTP requests for downloading apps
+requests==2.32.4
+
+# Data handling
+jsonschema==4.25.0
+PyYAML==6.0.2
+
+# Image comparison
+Pillow==11.3.0
+opencv-python==4.12.0.88
+
+# Utilities
+colorlog==6.9.0
+python-dotenv==1.1.1
+
+# Development tools
+black==25.1.0
+flake8==7.3.0
+pre-commit==4.2.0 
