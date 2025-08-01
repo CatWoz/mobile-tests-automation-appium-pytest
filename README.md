@@ -462,9 +462,7 @@ mobile-test-automation/
 │   └── test_users.json       # Test data
 ├── reports/                  # Test reports
 ├── requirements.txt          # Python dependencies
-├── pytest.ini              # Pytest settings
-├── README_CART_AND_E2E.md   # Cart and E2E testing guide
-└── E2E_TESTS_FIXES_SUMMARY.md # E2E tests fixes and status summary
+└── pytest.ini              # Pytest settings
 ```
 
 ---

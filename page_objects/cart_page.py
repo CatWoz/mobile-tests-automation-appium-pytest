@@ -12,8 +12,7 @@ class CartPage(BasePage):
     """Page Object for Shopping Cart screen"""
     
     # Main cart elements
-    # Try multiple possible cart screen headers since app may vary
-    CART_SCREEN_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[@text='YOUR CART' or @text='Cart' or @text='CART']")
+    CART_SCREEN_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[@text='YOUR CART']")
     CART_LIST = (AppiumBy.XPATH, "//*[contains(@content-desc, 'test-Cart list')]")
     CONTINUE_SHOPPING_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "test-CONTINUE SHOPPING")
     CHECKOUT_BUTTON = (AppiumBy.ACCESSIBILITY_ID, "test-CHECKOUT")
