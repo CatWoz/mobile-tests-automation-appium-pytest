@@ -2,6 +2,72 @@
 
 A comprehensive Appium-based mobile test automation framework for Android and iOS applications, built with Python and pytest.
 
+## 📱 **About the Test Application**
+
+This test framework is designed for the **Sauce Labs Sample Mobile App** - a comprehensive demo application that includes various mobile testing scenarios including login, shopping cart, checkout flow, and advanced features like biometric authentication, deep linking, and gesture interactions.
+
+### **📥 Download the Sample App**
+
+The sample app is available from the official Sauce Labs repository:
+
+**🔗 Download Link:** [https://github.com/saucelabs/sample-app-mobile/releases/](https://github.com/saucelabs/sample-app-mobile/releases/)
+
+### **📋 Available App Versions**
+
+The latest release (v2.7.1) includes the following app files:
+
+#### **🤖 Android**
+- **File:** `Android.SauceLabs.Mobile.Sample.app.2.7.1.apk`
+- **Usage:** Android emulators and real devices
+- **Size:** ~15MB
+
+#### **🍎 iOS Simulator**
+- **File:** `iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.app.zip`
+- **Usage:** iOS simulators only
+- **Size:** ~25MB
+
+#### **🍎 iOS Real Device**
+- **File:** `iOS.RealDevice.SauceLabs.Mobile.Sample.app.2.7.1.ipa.zip`
+- **Usage:** iOS real devices (requires re-signing for cloud environments)
+- **Size:** ~25MB
+- **Note:** This IPA only works in cloud environments where apps are re-signed
+
+### **🔧 App Configuration Setup**
+
+1. **Create environment configuration file:**
+   ```bash
+   cp .env_template .env
+   ```
+
+2. **Configure your `.env` file with download links:**
+   ```bash
+   # Android App Configuration
+   ANDROID_APP_APK_LINK=https://github.com/saucelabs/sample-app-mobile/releases/download/2.7.1/Android.SauceLabs.Mobile.Sample.app.2.7.1.apk
+   ANDROID_APP_APK_FILENAME=Android.SauceLabs.Mobile.Sample.app.2.7.1.apk
+   
+   # iOS App Configuration (Simulator)
+   IOS_APP_ZIP_LINK=https://github.com/saucelabs/sample-app-mobile/releases/download/2.7.1/iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.app.zip
+   IOS_APP_FILENAME_ZIP=iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.app.zip
+   ```
+
+3. **Download the app files:**
+   ```bash
+   # The test framework will automatically download the apps based on your .env configuration
+   # Or download manually to the apps/ directory:
+   # - apps/android/Android.SauceLabs.Mobile.Sample.app.2.7.1.apk
+   # - apps/ios/iOS.Simulator.SauceLabs.Mobile.Sample.app.2.7.1.app.zip
+   ```
+
+### **🎯 App Features Tested**
+
+This framework tests various features of the sample app:
+
+- **🔐 Authentication:** Login/logout with different user types
+- **🛒 Shopping Cart:** Add/remove products, cart management
+- **💳 Checkout Flow:** Complete purchase flow with form validation
+
+---
+
 ## 🚀 **Quick Start**
 
 This framework runs **locally** with Appium server and Android emulators for reliable mobile testing.
@@ -226,11 +292,6 @@ pytest tests/test_login.py -v -s
 # Run tests with HTML report
 pytest tests/ --html=reports/report.html -v
 
-# Run tests with Allure reports
-pytest tests/ --alluredir=reports/allure-results -v
-
-# Generate Allure report
-allure serve reports/allure-results
 ```
 
 ---
