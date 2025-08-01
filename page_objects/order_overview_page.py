@@ -20,8 +20,8 @@ class OrderOverviewPage(BasePage):
     ITEM_PRICE = (AppiumBy.XPATH, "//*[contains(@content-desc, 'test-Price')]")
     
     # Payment summary - using text-based selectors since content-desc not available
-    PAYMENT_INFO = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Payment Information')")
-    SHIPPING_INFO = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Shipping Information')")
+    PAYMENT_INFO = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Payment Information')]")
+    SHIPPING_INFO = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Shipping Information')]")
     SUBTOTAL = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Item total:')]")
     TAX = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Tax:')]")
     TOTAL = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'Total:')]")
