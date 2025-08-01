@@ -2,18 +2,59 @@
 Appium capabilities configuration for different platforms and devices.
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Base directory for the project
 BASE_DIR = Path(__file__).parent.parent
 
-# App paths
-ANDROID_APP_PATH = BASE_DIR / "apps/android/Android.SauceLabs.Mobile.Sample.app.2.7.1.apk"
-IOS_APP_PATH = BASE_DIR / "apps/ios"  # Will find .app file dynamically
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / ".env")
+
+# App directories
+ANDROID_APP_DIR = BASE_DIR / "apps/android"
+IOS_APP_DIR = BASE_DIR / "apps/ios"
+
+def get_android_app_path():
+    """Get Android app path dynamically from environment variable or find APK file"""
+    # Try to get filename from environment variable
+    app_filename = os.getenv('ANDROID_APP_APK_FILENAME')
+    
+    if app_filename:
+        app_path = ANDROID_APP_DIR / app_filename
+        if app_path.exists():
+            return str(app_path)
+    
+    # Fallback: find any APK file in the Android directory
+    android_dir = Path(ANDROID_APP_DIR)
+    apk_files = list(android_dir.glob("*.apk"))
+    if apk_files:
+        return str(apk_files[0])
+    
+    # Final fallback: return the default expected path
+    return str(ANDROID_APP_DIR/app_filename)
 
 def get_ios_app_path():
-    """Find the iOS app file (.ipa or .app) in the iOS apps directory"""
-    ios_dir = Path(IOS_APP_PATH)
+    """Get iOS app path dynamically from environment variable or find app file"""
+    # Try to get filename from environment variable
+    app_filename = os.getenv('IOS_APP_FILENAME_ZIP')
+    
+    if app_filename:
+        # Check if it's a zip file, extract .app name
+        if app_filename.endswith('.zip'):
+            app_name = app_filename.replace('.zip', '')
+            app_path = IOS_APP_DIR / app_name
+            if app_path.exists():
+                return str(app_path)
+        
+        # Direct file check
+        app_path = IOS_APP_DIR / app_filename
+        if app_path.exists():
+            return str(app_path)
+    
+    # Fallback: find any iOS app file in the directory
+    ios_dir = Path(IOS_APP_DIR)
     
     # First look for .ipa files (for real devices)
     ipa_files = list(ios_dir.glob("*.ipa"))
@@ -62,7 +103,7 @@ ANDROID_CAPS = {
         "platformVersion": "16",
         "deviceName": "Pixel_3a_API_36",
         "automationName": "UiAutomator2",
-        "app": str(ANDROID_APP_PATH),
+        "app": get_android_app_path(),
         "appPackage": "com.swaglabsmobileapp",
         "appActivity": "com.swaglabsmobileapp.MainActivity",
         "ensureWebviewsHavePages": True,
@@ -75,7 +116,7 @@ ANDROID_CAPS = {
         "platformName": "Android",
         "platformVersion": "16",
         "automationName": "UiAutomator2",
-        "app": str(ANDROID_APP_PATH),
+        "app": get_android_app_path(),
         "appPackage": "com.swaglabsmobileapp",
         "appActivity": "com.swaglabsmobileapp.MainActivity",
     }
