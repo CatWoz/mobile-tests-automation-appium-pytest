@@ -443,11 +443,18 @@ mobile-test-automation/
 │   ├── base_page.py          # Base page object class
 │   ├── login_page.py         # Login page object
 │   ├── inventory_page.py     # Inventory page object
+│   ├── cart_page.py          # Shopping cart page object
+│   ├── checkout_page.py      # Checkout form page object
+│   ├── order_overview_page.py # Order overview page object
+│   ├── confirmation_page.py  # Order confirmation page object
 │   └── __init__.py
 ├── tests/
 │   ├── conftest.py           # Pytest configuration
+│   ├── base_test.py          # Base test class
 │   ├── test_login.py         # Login test cases
 │   ├── test_inventory.py     # Inventory test cases
+│   ├── test_cart.py          # Shopping cart test cases
+│   ├── test_e2e_purchase.py  # End-to-end purchase tests
 │   └── __init__.py
 ├── apps/
 │   └── android/              # Android APK files
@@ -455,7 +462,9 @@ mobile-test-automation/
 │   └── test_users.json       # Test data
 ├── reports/                  # Test reports
 ├── requirements.txt          # Python dependencies
-└── pytest.ini              # Pytest settings
+├── pytest.ini              # Pytest settings
+├── README_CART_AND_E2E.md   # Cart and E2E testing guide
+└── E2E_TESTS_FIXES_SUMMARY.md # E2E tests fixes and status summary
 ```
 
 ---

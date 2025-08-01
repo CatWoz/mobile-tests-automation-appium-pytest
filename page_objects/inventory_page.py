@@ -12,7 +12,7 @@ class InventoryPage(BasePage):
     """Page Object for Inventory/Products screen"""
     
     # Main screen elements
-    PRODUCTS_SCREEN_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[@text='PRODUCTS']")
+    PRODUCTS_SCREEN_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[contains(@text, 'PRODUCT')]")
     MENU_BUTTON = (AppiumBy.XPATH, "//*[contains(@content-desc, 'test-Menu')]")
     CART_BUTTON = (AppiumBy.XPATH, "//*[contains(@content-desc, 'test-Cart')]")    
     CART_BADGE = (AppiumBy.XPATH, "//android.widget.TextView[@text and string-length(@text) > 0 and number(@text) = number(@text)]")
@@ -35,12 +35,12 @@ class InventoryPage(BasePage):
     FIRST_PRODUCT = (By.XPATH, "//*[contains(@content-desc, 'test-Item')]")
     SECOND_PRODUCT = (By.XPATH, "//*[contains(@content-desc, 'test-Item-1')]")
     
-    # Sort modal options
-    SORT_MODAL = (AppiumBy.XPATH, "//*[contains(@text, 'Sort Items by...')]")
-    SORT_NAME_ASC = (AppiumBy.XPATH, "//*[contains(@text, 'Name (A to Z)')]")
-    SORT_NAME_DESC = (AppiumBy.XPATH, "//*[contains(@text, 'Name (Z to A)')]")
-    SORT_PRICE_ASC = (AppiumBy.XPATH, "//*[contains(@text, 'Price (low to high)')]")
-    SORT_PRICE_DESC = (AppiumBy.XPATH, "//*[contains(@text, 'Price (high to low)')]")
+    # Sort modal options - using generic patterns for sort text
+    SORT_MODAL = (AppiumBy.XPATH, "//*[contains(@text, 'Sort') and contains(@text, 'by')]")
+    SORT_NAME_ASC = (AppiumBy.XPATH, "//*[contains(@text, 'Name') and contains(@text, 'A to Z')]")
+    SORT_NAME_DESC = (AppiumBy.XPATH, "//*[contains(@text, 'Name') and contains(@text, 'Z to A')]")
+    SORT_PRICE_ASC = (AppiumBy.XPATH, "//*[contains(@text, 'Price') and contains(@text, 'low to high')]") 
+    SORT_PRICE_DESC = (AppiumBy.XPATH, "//*[contains(@text, 'Price') and contains(@text, 'high to low')]")
     
     def __init__(self, driver):
         """Initialize Inventory Page"""
@@ -51,7 +51,7 @@ class InventoryPage(BasePage):
         return self.is_element_visible(self.PRODUCTS_SCREEN_HEADER, timeout) or \
                self.is_element_present(self.MENU_BUTTON, timeout)
     
-    def wait_for_inventory_screen(self, timeout: int = 15):
+    def wait_for_inventory_screen(self, timeout: int = 8):
         """Wait for inventory screen to load"""
         self.logger.info("Waiting for inventory screen")
         self.wait_for_element(self.PRODUCTS_SCREEN_HEADER, timeout)
@@ -109,12 +109,9 @@ class InventoryPage(BasePage):
         titles = []
         title_elements = self.find_elements(self.PRODUCT_TITLE, timeout=5)
         for element in title_elements:
-            try:
-                title = element.text
-                if title:
-                    titles.append(title)
-            except Exception:
-                continue
+            title = element.text
+            if title:
+                titles.append(title)
         self.logger.info(f"Found product titles: {titles}")
         return titles
     
@@ -123,12 +120,9 @@ class InventoryPage(BasePage):
         prices = []
         price_elements = self.find_elements(self.PRODUCT_PRICE, timeout=5)
         for element in price_elements:
-            try:
-                price = element.text
-                if price:
-                    prices.append(price)
-            except Exception:
-                continue
+            price = element.text
+            if price:
+                prices.append(price)
         self.logger.info(f"Found product prices: {prices}")
         return prices
     
@@ -153,9 +147,9 @@ class InventoryPage(BasePage):
                 # Found the product at the requested index
                 add_buttons[index].click()
                 self.logger.info(f"Product at position {index} added to cart")
-                # Brief wait for UI to update
-                import time
-                time.sleep(0.3)
+                
+                # Wait for cart badge to update (up to 2 seconds)
+                self._wait_for_cart_badge_update(timeout=2)
                 return
             
             # Product not found at current position, try scrolling down
@@ -189,9 +183,8 @@ class InventoryPage(BasePage):
                 added_count += 1
                 self.logger.info(f"Added product {added_count} of {count} to cart")
                 
-                # Brief wait for UI to update
-                import time
-                time.sleep(0.3)
+                # Wait for cart badge to update (up to 2 seconds)
+                self._wait_for_cart_badge_update(timeout=2)
                 
                 # Reset scroll attempts since we found a product
                 scroll_attempts = 0
@@ -230,9 +223,8 @@ class InventoryPage(BasePage):
                         added_count += 1
                         self.logger.info(f"Added product {added_count} to cart")
                         
-                        # Brief wait for UI to update
-                        import time
-                        time.sleep(0.2)
+                        # Wait for cart badge to update
+                        self._wait_for_cart_badge_update(timeout=2)
                     except Exception as e:
                         self.logger.warning(f"Failed to add product: {e}")
                         continue
@@ -356,13 +348,10 @@ class InventoryPage(BasePage):
     
     def get_cart_badge_count(self) -> Optional[int]:
         """Get number from cart badge. Returns None if badge is not visible (empty cart)"""
-        try:
-            if self.is_element_present(self.CART_BADGE, timeout=2):
-                badge_text = self.get_text(self.CART_BADGE).strip()
-                if badge_text.isdigit():
-                    return int(badge_text)
-        except Exception:
-            pass
+        if self.is_element_present(self.CART_BADGE, timeout=2):
+            badge_text = self.get_text(self.CART_BADGE).strip()
+            if badge_text.isdigit():
+                return int(badge_text)
         return None
     
     def is_cart_badge_visible(self) -> bool:
@@ -392,7 +381,24 @@ class InventoryPage(BasePage):
         
         return False
     
-    def wait_for_products_to_load(self, timeout: int = 15):
+    def _wait_for_cart_badge_update(self, timeout: int = 2):
+        """Wait for cart badge to update after adding/removing product"""
+        try:
+            import time
+            start_time = time.time()
+            
+            # Simple wait for UI to update
+            while time.time() - start_time < timeout:
+                if self.is_element_present(self.CART_BADGE, timeout=0.5):
+                    # Badge is present, wait a bit more for it to stabilize
+                    time.sleep(0.1)
+                    break
+                time.sleep(0.1)
+        except Exception:
+            # If wait fails, just continue
+            pass
+    
+    def wait_for_products_to_load(self, timeout: int = 8):
         """Wait for products to be loaded on screen"""
         self.logger.info("Waiting for products to load")
         self.wait_for_element(self.PRODUCT_ITEM, timeout)

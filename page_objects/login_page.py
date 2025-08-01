@@ -67,11 +67,8 @@ class LoginPage(BasePage):
         
     def get_error_message(self) -> Optional[str]:
         """Get error message if displayed"""
-        try:
-            if self.is_element_present(self.ERROR_MESSAGE, timeout=5):
-                return self.get_text(self.ERROR_MESSAGE)
-        except Exception:
-            pass
+        if self.is_element_present(self.ERROR_MESSAGE, timeout=5):
+            return self.get_text(self.ERROR_MESSAGE)
         return None
     
     def quick_login_standard_user(self):

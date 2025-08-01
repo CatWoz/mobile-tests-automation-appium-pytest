@@ -130,6 +130,62 @@ class BasePage:
             self.take_screenshot(f"click_failed_{int(time.time())}")
             raise
     
+    def click_with_scroll(self, locator: Tuple[str, str], max_scrolls: int = 3):
+        """
+        Universal strategy: check if visible -> click, if not -> wait 3s -> scroll -> check -> click
+        
+        Args:
+            locator: Tuple of (By method, locator value)
+            max_scrolls: Maximum number of scrolls to attempt
+        """
+        # First check if already visible and clickable
+        if self.is_element_clickable(locator, timeout=1):
+            self.click(locator)
+            return
+        
+        # Wait 3 seconds and try again
+        import time
+        time.sleep(3)
+        if self.is_element_clickable(locator, timeout=1):
+            self.click(locator)
+            return
+        
+        # Scroll and check after each scroll
+        for scroll_attempt in range(max_scrolls):
+            self.scroll_down()
+            time.sleep(0.3)  # Wait for scroll animation
+            
+            if self.is_element_clickable(locator, timeout=2):
+                self.click(locator)
+                return
+        
+        # Final attempt
+        raise Exception(f"Element not found or not clickable after scrolling: {locator}")
+    
+    def get_text_with_scroll(self, locator: Tuple[str, str], max_scrolls: int = 3) -> Optional[str]:
+        """
+        Universal strategy to get text: check if visible -> get text, if not -> scroll -> check -> get text
+        
+        Args:
+            locator: Tuple of (By method, locator value) 
+            max_scrolls: Maximum number of scrolls to attempt
+        """
+        # First check if already visible
+        if self.is_element_present(locator, timeout=1):
+            return self.get_text(locator)
+        
+        # Scroll and check after each scroll
+        for scroll_attempt in range(max_scrolls):
+            self.scroll_down()
+            import time
+            time.sleep(0.3)  # Wait for scroll animation
+            
+            if self.is_element_present(locator, timeout=2):
+                return self.get_text(locator)
+        
+        # Element not found
+        return None
+    
     def send_keys(self, locator: Tuple[str, str], text: str, clear_first: bool = True, timeout: int = 10):
         """
         Send keys to element
@@ -197,6 +253,7 @@ class BasePage:
             self.find_element(locator, timeout)
             return True
         except TimeoutException:
+            self.logger.debug(f"Element not present: {locator} (timeout: {timeout}s)")
             return False
     
     def is_element_visible(self, locator: Tuple[str, str], timeout: int = 5) -> bool:
@@ -215,8 +272,37 @@ class BasePage:
             wait.until(EC.visibility_of_element_located(locator))
             return True
         except TimeoutException:
+            self.logger.debug(f"Element not visible: {locator} (timeout: {timeout}s)")
             return False
     
+    def assert_element_present(self, locator: Tuple[str, str], timeout: int = 5, error_msg: str = None):
+        """
+        Assert that element is present, raise detailed error if not
+        
+        Args:
+            locator: Tuple of (By method, locator value)
+            timeout: Timeout in seconds
+            error_msg: Custom error message
+        """
+        if not self.is_element_present(locator, timeout):
+            detailed_msg = error_msg or f"Element not found: {locator[0]}='{locator[1]}' (timeout: {timeout}s)"
+            self.logger.error(detailed_msg)
+            raise AssertionError(detailed_msg)
+    
+    def assert_element_visible(self, locator: Tuple[str, str], timeout: int = 5, error_msg: str = None):
+        """
+        Assert that element is visible, raise detailed error if not
+        
+        Args:
+            locator: Tuple of (By method, locator value)
+            timeout: Timeout in seconds
+            error_msg: Custom error message
+        """
+        if not self.is_element_visible(locator, timeout):
+            detailed_msg = error_msg or f"Element not visible: {locator[0]}='{locator[1]}' (timeout: {timeout}s)"
+            self.logger.error(detailed_msg)
+            raise AssertionError(detailed_msg)
+
     def is_element_clickable(self, locator: Tuple[str, str], timeout: int = 5) -> bool:
         """
         Check if element is clickable
